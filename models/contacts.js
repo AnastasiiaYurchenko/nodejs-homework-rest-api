@@ -45,11 +45,11 @@ const addContact = async (body) => {
 };
 
 // const updateContact = async (contactId, body) => {};
-const updateContact = async (id, data) => {
+const updateContact = async (contactId, data) => {
   const contacts = await listContacts();
-  const ContactId = String(id);
+  const id = String(contactId);
   //знаходимо по індексу книгу, яку треба оновити
-  const index = contacts.findIndex((item) => item.id === contactId);
+  const index = contacts.findIndex((item) => item.id === id);
   //якщо внигу не знайдено, то повернути null
   if (index === -1) {
     return null;
