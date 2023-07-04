@@ -6,9 +6,9 @@ const router = express.Router();
 
 router.get("/", ctrl.listContacts);
 
-// router.get("/:contactId", ctrl.getContactById);
+router.get("/:contactId", ctrl.getContactById);
 
-// router.post("/", ctrl.addContact);
+router.post("/", ctrl.addContact);
 
 // router.delete("/:contactId", ctrl.removeContact);
 
