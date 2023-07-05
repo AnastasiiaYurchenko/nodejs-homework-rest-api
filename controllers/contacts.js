@@ -21,6 +21,7 @@ const getContactById = async (req, res, next) => {
   // console.log(req.params);
   try {
     const { contactId } = req.params;
+    // const result = await Contact.findOne({_id: contactId}); // з - використовується для пошуку всього, крім contactId
     const result = await Contact.findById(contactId);
     if (!result) {
       throw HttpError(404, "Not found");
@@ -57,43 +58,64 @@ const addContact = async (req, res, next) => {
   }
 };
 
-// const removeContact = async (req, res, next) => {
-//   try {
-//     const { contactId } = req.params;
-//     const result = await contacts.removeContact(contactId);
-//     if (!result) {
-//       throw HttpError(404, "Not found");
-//     }
-//     res.json({
-//       message: "contact deleted",
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+const removeContact = async (req, res, next) => {
+  try {
+    const { contactId } = req.params;
+    const result = await Contact.findByIdAndRemove(contactId);
+    if (!result) {
+      throw HttpError(404, "Not found");
+    }
+    res.json({
+      message: "contact deleted",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
-// const updateContact = async (req, res, next) => {
-//   try {
-//     const { error } = schemas.addSchema.validate(req.body);
+const updateContact = async (req, res, next) => {
+  try {
+    const { error } = schemas.addSchema.validate(req.body);
+    if (error) {
+      throw HttpError(400, error.message);
+    }
+    const { contactId } = req.params;
+    const result = await Contact.findByIdAndUpdate(contactId, req.body, {
+      new: true,
+    }); //передаємо 3-й параметр  {new:true}, щоб повернув новий обєкт, а не старий
+    if (!result) {
+      throw HttpError(404, "Not found");
+    }
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 
-//     if (error) {
-//       throw HttpError(400, error.message);
-//     }
-//     const { contactId } = req.params;
-//     const result = await contacts.updateContact(contactId, req.body);
-//     if (!result) {
-//       throw HttpError(404, "Not found");
-//     }
-//     res.json(result);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+const updateStatusContact = async (req, res, next) => {
+  try {
+    const { error } = schemas.updateFavoriteSchema.validate(req.body);
+    if (error) {
+      throw HttpError(400, error.message);
+    }
+    const { contactId } = req.params;
+    const result = await Contact.findByIdAndUpdate(contactId, req.body, {
+      new: true,
+    }); //передаємо 3-й параметр  {new:true}, щоб повернув новий обєкт, а не старий
+    if (!result) {
+      throw HttpError(404, "Not found");
+    }
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   listContacts,
   getContactById,
   addContact,
-  // removeContact,
-  // updateContact,
+  removeContact,
+  updateContact,
+  updateStatusContact,
 };

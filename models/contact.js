@@ -33,8 +33,13 @@ const addSchema = Joi.object({
   favorite: Joi.boolean(),
 });
 
+const updateFavoriteSchema = Joi.object({
+  favorite: Joi.boolean().required(),
+});
+
 const schemas = {
   addSchema,
+  updateFavoriteSchema,
 };
 
 //функція model створює клас,  який привязується до цієї колекції contact, і всередині якого валідація відбувається за схемою contactSchema
