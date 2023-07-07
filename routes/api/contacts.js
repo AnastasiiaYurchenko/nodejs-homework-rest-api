@@ -1,9 +1,5 @@
 const express = require("express");
 
-// const ctrl = require("../../controllers/contacts");
-
-// const ctrl = require("../../controllers/contacts");
-
 const {
   listContacts,
   getContactById,
@@ -18,7 +14,6 @@ const { isValidId } = require("../../middlewares");
 const router = express.Router();
 
 router.get("/", listContacts);
-// console.log(listContacts);
 
 router.get("/:contactId", isValidId, getContactById);
 
