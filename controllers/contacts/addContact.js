@@ -5,7 +5,7 @@ const { HttpError } = require("../../helpers");
 const addContact = async (req, res, next) => {
   try {
     const { error } = schemas.addSchema.validate(req.body);
-    console.log(error);
+    // console.log(error);
     if (error) {
       throw HttpError(400, error.message);
     }
