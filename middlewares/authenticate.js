@@ -16,7 +16,10 @@ const authenticate = async (req, res, next) => {
   try {
     const { id } = jwt.verify(token, SECRET_KEY);
     const user = await User.findById(id); //перевірка чи є людина в базі
-    if (!user) {
+
+    //|| !user.token  - якщо юзер є, але він розлогінений, щоб не зміг посилати запити
+
+    if (!user || !user.token) {
       next(HttpError(401, "Not authorized"));
     }
     req.user = user;
