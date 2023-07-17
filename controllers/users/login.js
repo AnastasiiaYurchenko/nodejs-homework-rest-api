@@ -33,6 +33,8 @@ const login = async (req, res, next) => {
 
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
 
+    await User.findByIdAndUpdate(user._id, { token }); //людині, яка залогінилася, записуємо  базу токен
+
     return res.status(200).json({
       token,
       user: { email: user.email, subscription: user.subscription },
