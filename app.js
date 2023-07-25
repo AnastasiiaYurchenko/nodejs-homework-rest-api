@@ -3,6 +3,7 @@ const logger = require("morgan");
 const cors = require("cors");
 require("dotenv").config(); //бере дані з текстового файлу .env і додає в process.env
 
+const usersRouter = require("./routes/api/users"); //імпортуємо роутер
 const contactsRouter = require("./routes/api/contacts");
 
 const app = express();
@@ -13,6 +14,7 @@ app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
 
+app.use("/api/users", usersRouter); //будь-який запит на api/users  треба оброблювати цим роутом usersRouter
 app.use("/api/contacts", contactsRouter);
 
 app.use((req, res) => {
