@@ -1,5 +1,6 @@
 const { User, schemas } = require("../../models/user");
 const bcrypt = require("bcrypt");
+const gravatar = require("gravatar");
 
 const { HttpError } = require("../../helpers");
 
@@ -19,8 +20,13 @@ const register = async (req, res, next) => {
     }
 
     const hashPassword = await bcrypt.hash(password, 10); //хешуємо пароль
+    const avatarURL = gravatar.url(email); // генерація URL тимчасової аватарки
 
-    const newUser = await User.create({ ...req.body, password: hashPassword }); //зберігаємо в базі захешований пароль, перед цим розпиливши req.body
+    const newUser = await User.create({
+      ...req.body,
+      password: hashPassword,
+      avatarURL,
+    }); //зберігаємо в базі захешований пароль  та URL тимчасової аватарки, перед цим розпиливши req.body
 
     return res.status(201).json({
       user: { email: newUser.email, subscription: newUser.subscription },
