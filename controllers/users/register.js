@@ -1,8 +1,9 @@
 const { User, schemas } = require("../../models/user");
 const bcrypt = require("bcrypt");
 const gravatar = require("gravatar");
+const { nanoid } = require("nanoid");
 
-const { HttpError } = require("../../helpers");
+const { HttpError, sendEmail } = require("../../helpers");
 
 const register = async (req, res, next) => {
   try {
@@ -21,12 +22,22 @@ const register = async (req, res, next) => {
 
     const hashPassword = await bcrypt.hash(password, 10); //хешуємо пароль
     const avatarURL = gravatar.url(email); // генерація URL тимчасової аватарки
+    const verificationToken = nanoid();
+    console.log(verificationToken);
 
     const newUser = await User.create({
       ...req.body,
       password: hashPassword,
       avatarURL,
-    }); //зберігаємо в базі захешований пароль  та URL тимчасової аватарки, перед цим розпиливши req.body
+      verificationToken,
+    }); //зберігаємо в базі захешований пароль  та URL тимчасової аватарки, i verificationToken,  перед цим розпиливши req.body
+
+    await sendEmail({
+      to: email,
+      subject: `Welcome, ${email}`,
+      html: `To confirm te registration, please, click on the link below: <a href="http://localhost:3000/api/users/verify/${verificationToken}">Click here</a>`,
+      text: `To confirm te registration, please, open the link below: http://localhost:3000/api/users/verify/${verificationToken}`,
+    });
 
     return res.status(201).json({
       user: { email: newUser.email, subscription: newUser.subscription },

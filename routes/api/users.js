@@ -6,6 +6,7 @@ const {
   getCurrent,
   logout,
   updateAvatar,
+  verify,
 } = require("../../controllers/users");
 const { authenticate, upload } = require("../../middlewares");
 
@@ -16,6 +17,8 @@ router.post("/register", register);
 
 // або signin
 router.post("/login", login);
+
+router.get("/verify/:verificationToken", verify);
 
 router.get("/current", authenticate, getCurrent);
 
