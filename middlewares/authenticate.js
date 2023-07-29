@@ -22,6 +22,11 @@ const authenticate = async (req, res, next) => {
     if (!user || !user.token) {
       next(HttpError(401, "Not authorized"));
     }
+
+    if (user.verify !== true) {
+      next(HttpError(401, "Token expired"));
+    }
+
     req.user = user;
     next();
   } catch {

@@ -22,6 +22,13 @@ const login = async (req, res, next) => {
       throw HttpError(400, error.message);
     }
 
+    //логін користувача не дозволено, якщо він не верифікований
+    if (user.verify !== true) {
+      return res
+        .status(401)
+        .json({ message: "Please verify your account first" });
+    }
+
     const comparePassword = await bcrypt.compare(password, user.password);
     if (!comparePassword) {
       throw HttpError(401, "Email or password is wrong");
