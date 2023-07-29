@@ -4,7 +4,7 @@ const { HttpError } = require("../../helpers");
 
 const verify = async (req, res, next) => {
   const { verificationToken } = req.params;
-  console.log(req.params);
+//   console.log(req.params);
 
   try {
     const user = await User.findOne({ verificationToken });

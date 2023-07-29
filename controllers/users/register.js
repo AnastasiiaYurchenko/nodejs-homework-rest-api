@@ -5,6 +5,8 @@ const { nanoid } = require("nanoid");
 
 const { HttpError, sendEmail } = require("../../helpers");
 
+const { BASE_URL } = process.env;
+
 const register = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -23,7 +25,7 @@ const register = async (req, res, next) => {
     const hashPassword = await bcrypt.hash(password, 10); //хешуємо пароль
     const avatarURL = gravatar.url(email); // генерація URL тимчасової аватарки
     const verificationToken = nanoid();
-    console.log(verificationToken);
+    // console.log(verificationToken);
 
     const newUser = await User.create({
       ...req.body,
@@ -34,9 +36,9 @@ const register = async (req, res, next) => {
 
     await sendEmail({
       to: email,
-      subject: `Welcome, ${email}`,
-      html: `To confirm te registration, please, click on the link below: <a href="http://localhost:3000/api/users/verify/${verificationToken}">Click here</a>`,
-      text: `To confirm te registration, please, open the link below: http://localhost:3000/api/users/verify/${verificationToken}`,
+      subject: `Verify email: ${email}`,
+      html: `To confirm te registration, please, click on the link below: <a href="${BASE_URL}/api/users/verify/${verificationToken}">Click here</a>`,
+      text: `To confirm te registration, please, open the link below: ${BASE_URL}/api/users/verify/${verificationToken}`,
     });
 
     return res.status(201).json({
